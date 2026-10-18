@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRIES AUDIO INGEST NODES // ELITE AUDIO DROP</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --panel-bg: #121216;
+            --border-color: #23232a;
+            --text-main: #dcdccf;
+            --accent-glow: #e5c158;
+            --system-purple: #9d4edd;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: monospace;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.1);
+        }
+        header {
+            border-bottom: 2px solid var(--accent-glow);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .title {
+            color: var(--accent-glow);
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #787880;
+            font-size: 11px;
+        }
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .status-box {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #4af626;
+            border-radius: 4px;
+        }
+        .btn-record {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--system-purple);
+            background: #1c1c24;
+            color: var(--text-main);
+            font-size: 16px;
+            font-family: monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+        }
+        .btn-record.recording {
+            border-color: #ff3333;
+            background: #330000;
+            box-shadow: 0 0 20px #ff3333;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .btn-submit {
+            background: #1c1c24;
+            border: 1px solid var(--accent-glow);
+            color: var(--accent-glow);
+            padding: 12px 24px;
+            font-family: monospace;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            border-radius: 4px;
+            display: none;
+        }
+        .btn-submit:hover {
+            background: var(--accent-glow);
+            color: #000;
+        }
+        footer {
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            font-size: 10px;
+            color: #787880;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="title">FRIES AUDIO INGEST NODES (Fries-AIN)</div>
+        <div class="subtitle">MOTHER BRAND: COLD FRENCH FRIES // GLOBAL SHREDDER NETWORK</div>
+    </header>
+
+    <div class="control-panel">
+        <div id="status" class="status-box">[SYSTEM]: Channel Offline // Awaiting Action</div>
+        <button id="record-btn" class="btn-record">START</button>
+        <button id="submit-btn" class="btn-submit">Submit Drop to Inbox</button>
+    </div>
+
+    <footer>
+        LOGISTICS REGISTRY: ISSN 3143-9756 // ARCHIVE TYPE: NAICS 516210<br>
+        TRACKING AUTHENTICITY CODE: Robert A. Parker VERIFIED 0000-0009-3719-0307<br>
+        STAGING BASE: WLT-LAND-OK-5111 // MAINTENANCE OVERHEAD: $0.00 ZERO-COST
+    </footer>
+</div>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+    const recordBtn = document.getElementById('record-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusBox = document.getElementById('status');
+
+    recordBtn.addEventListener('click', async () => {
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            // Start recording audio
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    statusBox.textContent = "[SYSTEM]: Audio Batch Compiled // Ready to Drop";
+                    statusBox.style.color = "#e5c158";
+                    submitBtn.style.display = 'block';
+                };
+
+                mediaRecorder.start();
+                statusBox.textContent = "🎙️ LIVE INGEST ACTIVE... SPEAK NOW";
+                statusBox.style.color = "#ff3333";
+                recordBtn.textContent = "STOP";
+                recordBtn.classList.add('recording');
+            } catch (err) {
+                statusBox.textContent = "[ERROR]: Microphone Access Denied";
+                statusBox.style.color = "#ff3333";
+            }
+        } else {
+            // Stop recording audio
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            recordBtn.textContent = "START";
+            recordBtn.classList.remove('recording');
+        }
+    });
+
+    submitBtn.addEventListener('click', () => {
+        statusBox.textContent = "⚡ TRANSMITTING DROP TO INBOX...";
+        statusBox.style.color = "#9d4edd";
+        
+        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+        
+        // This packages the file raw and forwards it to your target email inbox
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+            const base64Audio = reader.result.split(',')[1];
+            
+            // Forwarding configuration payload
+            const payload = {
+                to: "TheFamoLegacyOmnisphere@gmail.com",
+                subject: "NEW COLD FRIES AUDIO DROP",
+                audioData: base64Audio
+            };
+
+            // Sends directly via free serverless mail route
+            fetch('https://formspree.io', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: "New audio drop received from your sovereign platform link.",
+                    _attachment: reader.result
+                })
+            }).then(() => {
+                statusBox.textContent = "✅ SUCCESS! DROP DEPOSITED IN INBOX";
+                statusBox.style.color = "#4af626";
+                submitBtn.style.display = 'none';
+            }).catch(() => {
+                statusBox.textContent = "[ERROR]: Transmission Loop Failed";
+                statusBox.style.color = "#ff3333";
+            });
+        };
+    });
+</script>
+
+</body>
+</html>
